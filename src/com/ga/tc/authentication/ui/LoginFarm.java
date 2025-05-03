@@ -7,6 +7,7 @@ package com.ga.tc.authentication.ui;
 import com.ga.tc.authentication.bao.UserBao;
 import com.ga.tc.authentication.bao.UserBaoImp;
 import com.ga.tc.authentication.dto.UserInfoDto;
+import com.ga.tc.common.ui.MainFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -125,7 +126,8 @@ public class LoginFarm extends javax.swing.JFrame {
             UserInfoDto userInfo = business.authenticateUser(userEmailTxt.getText().trim(), passwordTxt.getText().trim());
             if (userInfo != null) {
                 // فتح الشاشة الرئيسية
-                JOptionPane.showMessageDialog(this, "تم تسجيل الدخول بنجاح", "تسجيل الدخول صحيح", JOptionPane.INFORMATION_MESSAGE);
+                new MainFrame(userInfo).setVisible(true);
+                this.dispose();
                 // هنا يمكن فتح النموذج الرئيسي
                 // MainForm mainForm = new MainForm(userInfo);
                 // mainForm.setVisible(true);

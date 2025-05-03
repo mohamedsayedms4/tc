@@ -2,6 +2,7 @@ package com.ga.tc.authentication.dao;
 
 import com.ga.tc.authentication.dto.UserInfoDto;
 import com.ga.tc.common.ConnectionFactory;
+import com.ga.tc.common.Decoder;
 import com.ga.tc.common.Qyeries;
 
 import java.sql.Connection;
@@ -95,7 +96,7 @@ public class UserDaoImp implements UserDao {
              PreparedStatement ps = conn.prepareStatement(Qyeries.AUTHENTICATE_USER)) {
 
             ps.setString(1, email);
-            ps.setString(2, password);
+            ps.setString(2, new Decoder().encode(password));
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
