@@ -12,41 +12,58 @@ import java.util.List;
 public class UserDaoImp implements UserDao {
 
     @Override
-   
-public Integer save(UserInfoDto user) {
-    if (user == null) return -1;
+    public Integer save(UserInfoDto user) {
+        if (user == null) return -1;
 
-    String query = (user.getUserId() > 0) ? Qyeries.UPDATE_USER : Qyeries.INSERT_NEW_USER;
+        String query = (user.getUserId() > 0) ? Qyeries.UPDATE_USER : Qyeries.INSERT_NEW_USER;
 
-    try (Connection conn = ConnectionFactory.createConnection();
-         PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConnectionFactory.createConnection();
+             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-        ps.setString(1, user.getFullName());
-        ps.setString(2, user.getEmail());
-        ps.setString(3, new Decoder().encode(user.getPassword()));
-        ps.setString(4, user.getPhones());
-        ps.setString(5, user.getAddress());
-        ps.setInt(6, 1); // ثابت أو يمكنك تغييره حسب منطقك
-        ps.setInt(7, 1); // المستخدم مفعل مثلاً
-        ps.setString(8, user.getLaf());
+            ps.setString(1, user.getFullName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, new Decoder().encode(user.getPassword()));
+            ps.setString(4, user.getPhones());
+            ps.setString(5, user.getAddress());
+            ps.setInt(6, 1);
+            ps.setInt(7, 1);
+            ps.setString(8, user.getLaf());
 
-        if (user.getUserId() > 0) {
-            ps.setInt(9, user.getUserId()); // تحديث
+            if (user.getUserId() > 0) {
+                ps.setInt(9, 1); // للـ update فقط
+            }
+
+            int affected = ps.executeUpdate();
+
+            if (affected == 0) return -1;
+
+            if (user.getUserId() <= 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
+
+            return user.getUserId(); // في حالة التحديث فقط
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
-
-        int affected = ps.executeUpdate();
-
-        if (affected == 0) return -1;
-
-        // لا تهمنا القيمة المولدة هنا، فقط نرجع 1 عند النجاح
-        return 1;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        return -1;
     }
-}
 
+    @Override
+    public Boolean delete(Integer userId) {
+        try (Connection conn = ConnectionFactory.createConnection();
+             PreparedStatement ps = conn.prepareStatement(Qyeries.DELETE_USER)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     @Override
     public UserInfoDto search(Object key, Integer type) {
@@ -126,10 +143,5 @@ public Integer save(UserInfoDto user) {
         user.setActive(rs.getInt("USR_ACTIVE"));
         user.setLaf(rs.getString("USR_LAF"));
         return user;
-    }
-
-    @Override
-    public Boolean delete(Integer userId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

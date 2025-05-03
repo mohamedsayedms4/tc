@@ -209,11 +209,13 @@ public class CreateNewUser extends javax.swing.JPanel {
                 //Role code
                 
                 //
-                if(business.save(user) == 1){
+                if(business.save(user) == null){
+                            JOptionPane.showMessageDialog(this, "User is NOT saved sucessfully", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }else
                     JOptionPane.showMessageDialog(this, "User is saved sucessfully" ,"Success", JOptionPane.INFORMATION_MESSAGE);
                     resetCreationPanel();
-                }else
-                    JOptionPane.showMessageDialog(this, "User is NOT saved sucessfully" ,"Error", JOptionPane.ERROR_MESSAGE);
+                    
             }
     
         }catch(Exception e){
