@@ -8,6 +8,10 @@ package com.ga.tc.authentication.ui;
 import com.ga.tc.authentication.bao.UserBao;
 import com.ga.tc.authentication.bao.UserBaoImp;
 import com.ga.tc.authentication.dto.UserInfoDto;
+import com.ga.tc.common.LAF;
+import java.util.Vector;
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,8 +26,9 @@ public class CreateNewUser extends javax.swing.JPanel {
     public CreateNewUser() {
         initComponents();
         errorMsg.setVisible(false);
+        
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,7 +62,7 @@ public class CreateNewUser extends javax.swing.JPanel {
 
         jLabel2.setText("Email:(*)");
 
-        jLabel3.setText("Password:");
+        jLabel3.setText("Password (*):");
 
         jLabel4.setText("Phone:");
 
@@ -67,13 +72,7 @@ public class CreateNewUser extends javax.swing.JPanel {
 
         jLabel7.setText("Role (*):");
 
-        fNameTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fNameTxtActionPerformed(evt);
-            }
-        });
-
-        lafsCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fillInLAFs();
 
         rolesCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -103,42 +102,41 @@ public class CreateNewUser extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel7))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(createUserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(rolesCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, 150, Short.MAX_VALUE)
+                                            .addComponent(lafsCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(addressTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(phonTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(passTxt)
+                                            .addComponent(emailTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(fNameTxt))
+                                        .addGap(17, 17, 17)
+                                        .addComponent(defaultChk))))
                             .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel7))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(createUserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(rolesCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, 150, Short.MAX_VALUE)
-                                                .addComponent(lafsCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(addressTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(phonTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(passTxt)
-                                                .addComponent(emailTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(fNameTxt))
-                                            .addGap(17, 17, 17)
-                                            .addComponent(defaultChk))))))
-                        .addContainerGap(130, Short.MAX_VALUE))
+                            .addComponent(jLabel6))
+                        .addContainerGap(45, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel3))
-                        .addGap(0, 420, Short.MAX_VALUE))))
+                            .addComponent(jLabel3)
+                            .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(82, 82, 82)
+                .addContainerGap()
                 .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(fNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -179,15 +177,19 @@ public class CreateNewUser extends javax.swing.JPanel {
 
     private void createUserBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createUserBtnActionPerformed
         try{
-            boolean hasError = false;
+            boolean hasError = false, useDefaultPassword = false;
+            
             if("".equals(fNameTxt.getText().trim())){
                 hasError = true;
             }
             if("".equals(emailTxt.getText().trim())){
                 hasError = true;
             }
+            if(defaultChk.getModel().isSelected()){
+                useDefaultPassword = true;
+            }
             if("".equals(passTxt.getText().trim()) &&
-                   !defaultChk.getModel().isSelected()){
+                   !useDefaultPassword){
                 hasError = true;
             }
             if(hasError){
@@ -196,7 +198,22 @@ public class CreateNewUser extends javax.swing.JPanel {
                 errorMsg.setVisible(false);
                 UserInfoDto user  = new UserInfoDto();
                 //fill-in the user information from the UI
-                business.save(user);
+                user.setFullName(fNameTxt.getText().trim());
+                user.setEmail(emailTxt.getText().trim());
+                user.setPassword(useDefaultPassword ? null : passTxt.getText());
+                user.setPhones(phonTxt.getText().trim());
+                user.setAddress(addressTxt.getText().trim());
+                LAF selected = (LAF)lafsCombo.getModel().getSelectedItem();
+                user.setLaf(selected.getClassName());
+                
+                //Role code
+                
+                //
+                if(business.save(user) == 1){
+                    JOptionPane.showMessageDialog(this, "User is saved sucessfully" ,"Success", JOptionPane.INFORMATION_MESSAGE);
+                    resetCreationPanel();
+                }else
+                    JOptionPane.showMessageDialog(this, "User is NOT saved sucessfully" ,"Error", JOptionPane.ERROR_MESSAGE);
             }
     
         }catch(Exception e){
@@ -205,10 +222,6 @@ public class CreateNewUser extends javax.swing.JPanel {
         }
         
     }//GEN-LAST:event_createUserBtnActionPerformed
-
-    private void fNameTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fNameTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fNameTxtActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -230,4 +243,32 @@ public class CreateNewUser extends javax.swing.JPanel {
     private javax.swing.JTextField phonTxt;
     private javax.swing.JComboBox<String> rolesCombo;
     // End of variables declaration//GEN-END:variables
+
+    private void fillInLAFs() {
+        //INITIATE LAF COMBO.
+        Vector<LAF> model = new Vector<>();
+//        model.addElement(new LAF("-- Select --",null));
+        model.addElement(new LAF("Aero","com.jtattoo.plaf.aero.AeroLookAndFeel"));
+        model.addElement(new LAF("Aluminium","com.jtattoo.plaf.aluminium.AluminiumLookAndFeel"));
+        model.addElement(new LAF("Bernstein","com.jtattoo.plaf.bernstein.BernsteinLookAndFeel"));
+        model.addElement(new LAF("HI FI","com.jtattoo.plaf.hifi.HiFiLookAndFeel"));
+        model.addElement(new LAF("Luna", "com.jtattoo.plaf.luna.LunaLookAndFeel"));
+        model.addElement(new LAF("McWin","com.jtattoo.plaf.mcwin.McWinLookAndFeel"));
+        model.addElement(new LAF("Mint","com.jtattoo.plaf.mint.MintLookAndFeel"));
+        model.addElement(new LAF("Noire","com.jtattoo.plaf.noire.NoireLookAndFeel"));
+        model.addElement(new LAF("SmarT","com.jtattoo.plaf.smart.SmartLookAndFeel"));
+        model.addElement(new LAF("Texture","com.jtattoo.plaf.texture.TextureLookAndFeel"));
+        model.addElement(new LAF("Acry","com.jtattoo.plaf.acryl.AcrylLookAndFeel"));
+        model.addElement(new LAF("Aluminium","com.jtattoo.plaf.aluminium.AluminiumLookAndFeel"));
+        model.addElement(new LAF("Texture","com.jtattoo.plaf.texture.TextureLookAndFeel"));
+        lafsCombo = new JComboBox(model);
+    }
+
+    private void resetCreationPanel() {
+       fNameTxt.setText("");
+       passTxt.setText("");
+       phonTxt.setText("");
+       addressTxt.setText("");
+       emailTxt.setText("");
+    }
 }

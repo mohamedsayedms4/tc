@@ -12,8 +12,9 @@ public class Qyeries {
 
     // استعلام إدخال مستخدم جديد 
     public static String INSERT_NEW_USER =
-        "INSERT INTO TC_USER (USR_FULL_NAME, USR_EMAIL, USR_PASSWORD, USR_PHONE, USR_ADDRESS, USR_ROLE, USR_ACTIVE, USR_LAF) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-    
+    "INSERT INTO TC_USER (USR_FULL_NAME, USR_EMAIL, USR_PASSWORD, USR_PHONE, USR_ADDRESS, USR_ROLE, USR_ACTIVE, USR_LAF) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
     // استعلام تحديث مستخدم موجود
     public static String UPDATE_USER =
         "UPDATE TC_USER SET USR_FULL_NAME=?, USR_EMAIL=?, USR_PASSWORD=?, USR_PHONE=?, USR_ADDRESS=?, USR_ROLE=?, USR_ACTIVE=?, USR_LAF=? WHERE USR_ID=?";

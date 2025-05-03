@@ -7,6 +7,7 @@ package com.ga.tc.authentication.bao;
 import com.ga.tc.authentication.dao.UserDao;
 import com.ga.tc.authentication.dao.UserDaoImp;
 import com.ga.tc.authentication.dto.UserInfoDto;
+import com.ga.tc.common.Constants;
 import java.util.List;
 
 /**
@@ -17,6 +18,14 @@ public class UserBaoImp implements UserBao{
     private UserDao data = new UserDaoImp();
     @Override
     public Integer save(UserInfoDto user) {
+        try{
+            if(user.getPassword() == null)
+            {
+                user.setPassword(Constants.DEFULT_PASSWORD)  ;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return data.save(user);
     }
 

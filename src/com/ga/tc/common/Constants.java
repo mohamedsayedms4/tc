@@ -16,5 +16,6 @@ public class Constants {
     public static final Boolean STATUS_INACTIVE = false;
     public static final Boolean STATUS_ACTIVE = true;
     public static final Integer STATU_LIST_ALL = 2;
-
+    
+    public static final String DEFULT_PASSWORD = "000";
 }

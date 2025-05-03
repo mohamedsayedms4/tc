@@ -5,91 +5,88 @@ import com.ga.tc.common.ConnectionFactory;
 import com.ga.tc.common.Decoder;
 import com.ga.tc.common.Qyeries;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.List;
-
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserDaoImp implements UserDao {
 
     @Override
-    public Integer save(UserInfoDto user) {
-        if (user == null) {
-            return -1; // Return -1 if the user object is null
+   
+public Integer save(UserInfoDto user) {
+    if (user == null) return -1;
+
+    String query = (user.getUserId() > 0) ? Qyeries.UPDATE_USER : Qyeries.INSERT_NEW_USER;
+
+    try (Connection conn = ConnectionFactory.createConnection();
+         PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+        ps.setString(1, user.getFullName());
+        ps.setString(2, user.getEmail());
+        ps.setString(3, new Decoder().encode(user.getPassword()));
+        ps.setString(4, user.getPhones());
+        ps.setString(5, user.getAddress());
+        ps.setInt(6, 1); // ثابت أو يمكنك تغييره حسب منطقك
+        ps.setInt(7, 1); // المستخدم مفعل مثلاً
+        ps.setString(8, user.getLaf());
+
+        if (user.getUserId() > 0) {
+            ps.setInt(9, user.getUserId()); // تحديث
         }
 
-        // Choose the appropriate query based on whether the user ID exists (update) or not (insert)
-        String query = (user.getUserId() > 0) ? Qyeries.UPDATE_USER : Qyeries.INSERT_NEW_USER;
+        int affected = ps.executeUpdate();
 
-        try (Connection conn = ConnectionFactory.createConnection();
-             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        if (affected == 0) return -1;
 
-            // Set the common parameters for both insert and update
-            ps.setString(1, user.getFullName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPassword());
-            ps.setString(4, user.getPhones());
-            ps.setString(5, user.getAddress());
-            ps.setInt(6, user.getRoleId());
-            ps.setInt(7, user.getActive());
-            ps.setString(8, user.getLaf());
+        // لا تهمنا القيمة المولدة هنا، فقط نرجع 1 عند النجاح
+        return 1;
 
-            // If updating, set the user ID parameter at index 9
-            if (user.getUserId() > 0) {
-                ps.setInt(9, user.getUserId());
-            }
-
-            int affectedRows = ps.executeUpdate();
-
-            if (affectedRows == 0) {
-                return -1; // No rows affected, return -1
-            }
-
-            // If inserting a new user, retrieve the generated user ID
-            if (user.getUserId() <= 0) {
-                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1); // Return the new user ID
-                    } else {
-                        return -1; // No ID generated, return -1
-                    }
-                }
-            }
-
-            // Return the existing user ID in case of update
-            return user.getUserId();
-
-        } catch (Exception e) {
-            e.printStackTrace(); // Print the exception for debugging
-            return -1;
-        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return -1;
     }
+}
 
-    @Override
-    public Boolean delete(Integer userId) {
-        // Not implemented yet
-        return false;
-    }
 
     @Override
     public UserInfoDto search(Object key, Integer type) {
-        // Not implemented yet
+       
+           
+
         return null;
     }
 
     @Override
     public List<UserInfoDto> listAll(Integer active) {
-        // Not implemented yet
-        return null;
+        String query;
+        if (active == null) {
+            query = Qyeries.LIST_ALL_USERS;
+        } else if (active == 1) {
+            query = Qyeries.LIST_ACTIVE_USERS;
+        } else {
+            query = Qyeries.LIST_INACTIVE_USERS;
+        }
+
+        List<UserInfoDto> users = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.createConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                users.add(mapResultSetToUserDto(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return users;
     }
 
     @Override
     public UserInfoDto authenticateUser(String email, String password) {
-        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-            return null; // Return null if email or password is invalid
+        if (email == null || password == null || email.isBlank() || password.isBlank()) {
+            return null;
         }
 
         try (Connection conn = ConnectionFactory.createConnection();
@@ -100,37 +97,39 @@ public class UserDaoImp implements UserDao {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    // If credentials match, populate and return the user object
-                    UserInfoDto userInfo = new UserInfoDto();
-                    userInfo.setUserId(rs.getInt("USR_ID"));
-                    userInfo.setFullName(rs.getString("USR_FULL_NAME"));
-                    userInfo.setPhones(rs.getString("USR_PHONE"));
-                    userInfo.setAddress(rs.getString("USR_ADDRESS"));
-                    userInfo.setRoleId(rs.getInt("USR_ROLE"));
-                    userInfo.setLaf(rs.getString("USR_LAF"));
-                    return userInfo;
+                    UserInfoDto user = new UserInfoDto();
+                    user.setUserId(rs.getInt("USR_ID"));
+                    user.setFullName(rs.getString("USR_FULL_NAME"));
+                    user.setPhones(rs.getString("USR_PHONE"));
+                    user.setAddress(rs.getString("USR_ADDRESS"));
+                    user.setRoleId(rs.getInt("USR_ROLE"));
+                    user.setLaf(rs.getString("USR_LAF"));
+                    return user;
                 }
             }
 
         } catch (Exception e) {
-            e.printStackTrace(); // Print the exception for debugging
+            e.printStackTrace();
         }
 
-        return null; // Authentication failed
+        return null;
     }
 
-    // Helper method to convert a ResultSet row into a UserInfoDto object
     private UserInfoDto mapResultSetToUserDto(ResultSet rs) throws Exception {
         UserInfoDto user = new UserInfoDto();
         user.setUserId(rs.getInt("USR_ID"));
         user.setFullName(rs.getString("USR_FULL_NAME"));
         user.setEmail(rs.getString("USR_EMAIL"));
-        // We do not retrieve the password for security reasons
         user.setPhones(rs.getString("USR_PHONE"));
         user.setAddress(rs.getString("USR_ADDRESS"));
         user.setRoleId(rs.getInt("USR_ROLE"));
         user.setActive(rs.getInt("USR_ACTIVE"));
         user.setLaf(rs.getString("USR_LAF"));
         return user;
+    }
+
+    @Override
+    public Boolean delete(Integer userId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
