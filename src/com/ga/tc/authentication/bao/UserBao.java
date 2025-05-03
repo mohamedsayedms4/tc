@@ -56,5 +56,5 @@ public interface UserBao {
      * @return null if the user Info are fake
      * otherwise retuns full userInfo
      */
-    public  UserInfoDto authenticatUser(String email , String password);
+    public  UserInfoDto authenticateUser(String email , String password);
 }

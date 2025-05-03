@@ -1,28 +1,19 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.ga.tc.common;
 
 import com.ga.tc.authentication.dao.UserDao;
 import com.ga.tc.authentication.dao.UserDaoImp;
 import com.ga.tc.authentication.dto.UserInfoDto;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 
 /**
  *
  * @author Mohamed Sayed
  */
-public class tcApp {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+public class test {
+      public static void main(String[] args) {
 //        // TODO code application logic here
 //         // TODO code application logic here
         UserInfoDto user = new UserInfoDto();
@@ -40,18 +31,14 @@ public class tcApp {
         Integer newUserId = userDao.save(user);
 
         // طباعة النتيجة
-//        if (newUserId != null && newUserId != -1) {
-//            System.out.println("yes " + newUserId);
-//        } else {
-//            System.out.println("no.");
-//        }
+        if (newUserId != null && newUserId != -1) {
+            System.out.println("yes " + newUserId);
+        } else {
+            System.out.println("no.");
+        }
 
     }
 }
     
         
-                
-    
-    
-    
 

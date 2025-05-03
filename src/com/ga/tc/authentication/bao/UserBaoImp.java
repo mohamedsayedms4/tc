@@ -36,8 +36,11 @@ public class UserBaoImp implements UserBao{
     }
 
     @Override
-    public UserInfoDto authenticatUser(String email, String password) {
-        return data.authenticatUser(email,password);
+    public UserInfoDto authenticateUser(String email, String password) {
+        
+        
+       
+        return data.authenticateUser(email, password);
     }
     
 }
